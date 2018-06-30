@@ -91,11 +91,12 @@ fn swap_pairs_beyond_link(link: &mut Option<Box<Node>>, depth: usize) {
     println!("{:?}now a is {:?}", prefix, a);
     println!("{:?}now b is {:?}", prefix, b);
     //mem::swap(link, &mut b.next);
+    swap_pairs_beyond_link(&mut a.next, depth+2);
     b.next = Some(a);
     //println!("{:?}now now a is {:?}", prefix, a);
     println!("{:?}now now b is {:?}", prefix, b);
     
-//    swap_pairs_beyond_link(&mut b.next.expect("more b").next, depth+2);
+//    
     mem::replace(link, Some(b));
 }
 
@@ -109,7 +110,7 @@ fn swap_pairs(list: &mut List) {
 
 Because nums[0] + nums[1] = 2 + 7 = 9,
 return [0, 1].*/
-
+/*
 fn two_sum_slow(numbers: Vec<i32>, total: i32) -> (usize, usize) {
     for (i, item_i) in numbers.iter().enumerate() {
         for (j, item_j) in numbers[i+1..].iter().enumerate() {
@@ -121,7 +122,7 @@ fn two_sum_slow(numbers: Vec<i32>, total: i32) -> (usize, usize) {
     }
     panic!("Not found");
 }
-
+*/
 use std::collections::HashMap;
 
 fn two_sum(numbers: Vec<i32>, total: i32) -> (usize, usize) {
