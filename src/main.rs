@@ -2,34 +2,34 @@
 use std::mem;
 
 #[derive(Debug)]
-pub struct List {
-    head: Option<Box<Node>>
+pub struct List<T> {
+    head: Option<Box<Node<T>>>
 }
 
 #[derive(Debug)]
-struct Node {
-    elem: i32,
-    next: Option<Box<Node>>
+struct Node<T> {
+    elem: T,
+    next: Option<Box<Node<T>>>
 }
 
-impl Clone for Node
+/*impl Clone for Node<T>
 {
     fn clone(&self) -> Node {
         Node { elem: self.elem.clone(), next: self.next.clone() }
     }
-}
+}*/
 
-impl List {
+impl<T> List<T> {
     pub fn new() -> Self {
         List { head: None }
     }
 
-    pub fn push(&mut self, value: i32) {
+    pub fn push(&mut self, value: T) {
         let new_node = Box::new(Node { elem: value, next: self.head.take() });
         self.head = Some(new_node);
     }
 
-    pub fn pop(&mut self) -> Option<i32> {
+    pub fn pop(&mut self) -> Option<T> {
         self.head.take().map( |boxed_node| {
             let node = *boxed_node;
             self.head = node.next;
@@ -70,7 +70,7 @@ mod test {
     }
 }
 
-fn swap_pairs_beyond_link(link: &mut Option<Box<Node>>, depth: usize) {
+fn swap_pairs_beyond_link<T>(link: &mut Option<Box<Node<T>>>, depth: usize) {
     match & link {
         None => return,
         Some(ref boxed_node) => {
@@ -99,28 +99,28 @@ fn swap_pairs_beyond_link(link: &mut Option<Box<Node>>, depth: usize) {
 }
 
 
-fn swap_pairs(list: &mut List) {
+fn swap_pairs<T>(list: &mut List<T>) {
 	swap_pairs_beyond_link(&mut list.head, 0);
 }
 
-fn iterate_list(list: &List, operation: &Fn(i32)) {
+fn iterate_list<T>(list: &List<T>, operation: &Fn(&T)) {
 	let mut link = &list.head;
 	loop {
 		match link {
 			None => return,
 			Some(ref boxed_node) => {
-				operation(boxed_node.elem);
+				operation(&boxed_node.elem);
 				link = &boxed_node.next;
 			}
 		}
 	}
 }
 
-fn print_i32(val: i32) {
+fn print_i32(val: &i32) {
 	println!("{:?}", val);
 }
 
-fn print_list(list: &List) {
+fn print_list(list: &List<i32>) {
 	iterate_list(list, &print_i32);
 }
 
