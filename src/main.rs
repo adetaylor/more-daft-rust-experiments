@@ -81,22 +81,20 @@ fn swap_pairs_beyond_link(link: &mut Option<Box<Node>>, depth: usize) {
         }
     }
     // We have confirmed we have two nodes to swap
-    let prefix = String::from_utf8(vec![b' '; depth]).expect("valid utf8");
-    println!("{:?}Going to swap nodes after {:?}", prefix, link);
+    //let prefix = String::from_utf8(vec![b' '; depth]).expect("valid utf8");
+    //println!("{:?}Going to swap nodes after {:?}", prefix, link);
     let mut a = link.take().expect("there is no a"); // Box<Node>
-    println!("{:?}a is {:?}", prefix, a);
+    //println!("{:?}a is {:?}", prefix, a);
     let mut b = a.next.take().expect("lack of b"); // Box<Node>
-    println!("{:?}b is {:?}", prefix, b);
+    //println!("{:?}b is {:?}", prefix, b);
     mem::swap(&mut a.next, &mut b.next);
-    println!("{:?}now a is {:?}", prefix, a);
-    println!("{:?}now b is {:?}", prefix, b);
+    //println!("{:?}now a is {:?}", prefix, a);
+    //println!("{:?}now b is {:?}", prefix, b);
     //mem::swap(link, &mut b.next);
     swap_pairs_beyond_link(&mut a.next, depth+2);
     b.next = Some(a);
     //println!("{:?}now now a is {:?}", prefix, a);
-    println!("{:?}now now b is {:?}", prefix, b);
-    
-//    
+    //println!("{:?}now now b is {:?}", prefix, b);
     mem::replace(link, Some(b));
 }
 
@@ -105,6 +103,26 @@ fn swap_pairs(list: &mut List) {
 	swap_pairs_beyond_link(&mut list.head, 0);
 }
 
+fn iterate_list(list: &List, operation: &Fn(i32)) {
+	let mut link = &list.head;
+	loop {
+		match link {
+			None => return,
+			Some(ref boxed_node) => {
+				operation(boxed_node.elem);
+				link = &boxed_node.next;
+			}
+		}
+	}
+}
+
+fn print_i32(val: i32) {
+	println!("{:?}", val);
+}
+
+fn print_list(list: &List) {
+	iterate_list(list, &print_i32);
+}
 
 /*Given nums = [2, 7, 11, 15], target = 9,
 
@@ -147,7 +165,8 @@ fn main() {
     l.push(3);
     l.push(2);
     l.push(1);
-    println!("List starts as {:?}", l);
+    print_list(&l);
     swap_pairs(&mut l);
-    println!("List ends as {:?}", l);
+    println!("After swap");
+    print_list(&l);
 }
