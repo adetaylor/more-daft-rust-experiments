@@ -36,6 +36,21 @@ impl<T> List<T> {
             node.elem
         })
     }
+    pub fn swap_pairs(&mut self) {
+		swap_pairs_beyond_link(&mut self.head, 0);
+	}
+	pub fn iterate(&self, operation: &Fn(&T)) {
+		let mut link = &self.head;
+		loop {
+			match link {
+				None => return,
+				Some(ref boxed_node) => {
+					operation(&boxed_node.elem);
+					link = &boxed_node.next;
+				}
+			}
+		}
+	}
 }
 mod test {
     #[test]
@@ -99,29 +114,16 @@ fn swap_pairs_beyond_link<T>(link: &mut Option<Box<Node<T>>>, depth: usize) {
 }
 
 
-fn swap_pairs<T>(list: &mut List<T>) {
-	swap_pairs_beyond_link(&mut list.head, 0);
-}
 
-fn iterate_list<T>(list: &List<T>, operation: &Fn(&T)) {
-	let mut link = &list.head;
-	loop {
-		match link {
-			None => return,
-			Some(ref boxed_node) => {
-				operation(&boxed_node.elem);
-				link = &boxed_node.next;
-			}
-		}
-	}
-}
+
+
 
 fn print_i32(val: &i32) {
 	println!("{:?}", val);
 }
 
 fn print_list(list: &List<i32>) {
-	iterate_list(list, &print_i32);
+	list.iterate(&print_i32);
 }
 
 /*Given nums = [2, 7, 11, 15], target = 9,
@@ -161,12 +163,13 @@ fn main() {
     let pair = two_sum(nums, 18);
     println!("Result is {:?},{:?}", pair.0, pair.1);
     let mut l = List::new();
+    l.push(5);
     l.push(4);
     l.push(3);
     l.push(2);
     l.push(1);
     print_list(&l);
-    swap_pairs(&mut l);
+    l.swap_pairs();
     println!("After swap");
     print_list(&l);
 }
